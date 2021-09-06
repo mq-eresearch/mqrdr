@@ -3,9 +3,11 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
+title: Home
+nav_order: 0
 ---
 
-# About
+# Home
 
 Macquarie University's Institutional _Research Data Repository_ (RDR) allows researchers to upload, publish, search and download research data.
 

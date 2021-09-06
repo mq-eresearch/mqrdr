@@ -7,6 +7,12 @@ nav_order: 2
 
 # Projects
 
+---
+
+_See [https://docs.figsh.com/#projects_list](https://docs.figsh.com/#projects_list) for related Figshare API documentation_
+
+---
+
 - Projects
   - [List projects belonging to current user](#list-user-projects)
   - [Search projects belonging to the current user](#search-user-projects)

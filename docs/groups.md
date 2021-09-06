@@ -1,6 +1,10 @@
 ---
-layout: home
-nav_order: 5
+layout: page
+title: Groups
+permalink: /groups/
+nav_order: 4
 ---
 
 # Groups
+
+**Coming Soon**
