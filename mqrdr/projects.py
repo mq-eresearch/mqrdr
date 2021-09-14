@@ -9,6 +9,7 @@ from mqrdr import utils, file_utils
 def list_projects(base_url, token, page=1, page_size=10, impersonated_id=None):
     ''' List projects belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string, required)
     page: Page number. Used for pagination with page_size (integer, optional, default = 1)
     page_size: The number of results included on a page. Used for pagination with page (integer, optional, default = 10)
@@ -26,6 +27,7 @@ def list_projects(base_url, token, page=1, page_size=10, impersonated_id=None):
 def search_projects(base_url, token, data):
     ''' Search projects belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     data: Dictionary object containing project filters
     '''
@@ -38,6 +40,7 @@ def search_projects(base_url, token, data):
 def view_project(base_url, token, project_id, impersonated_id=None):
     ''' View a project belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string, required)
     project_id: ID of the project (integer, required)
     impersonated_id: Account ID of user being impersonated (integer, optional, only usable by RDR admin accounts)
@@ -54,6 +57,7 @@ def view_project(base_url, token, project_id, impersonated_id=None):
 def create_project(base_url, token, data):
     ''' Create a private project belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     data: Dictionary object containing project parameters
     '''
@@ -66,6 +70,7 @@ def create_project(base_url, token, data):
 def update_project(base_url, token, project_id, data):
     ''' Update a project belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     data: Dictionary object containing updated project attributes
@@ -79,6 +84,7 @@ def update_project(base_url, token, project_id, data):
 def delete_project(base_url, token, project_id):
     ''' Delete a project belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     '''
@@ -91,6 +97,7 @@ def delete_project(base_url, token, project_id):
 def list_project_articles(base_url, token, project_id, page=1, page_size=10, impersonated_id=None):
     ''' List a project's articles
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     page: Page number. Used for pagination with page_size (integer, optional, default = 1)
@@ -109,6 +116,7 @@ def list_project_articles(base_url, token, project_id, page=1, page_size=10, imp
 def view_project_article(base_url, token, project_id, article_id, impersonated_id=None):
     ''' View an article belonging to a project
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string, required)
     project_id: ID of the project (integer, required)
     article_id: ID of the article (integer, required)
@@ -126,6 +134,7 @@ def view_project_article(base_url, token, project_id, article_id, impersonated_i
 def create_project_article(base_url, token, project_id, data):
     ''' Create a new project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     data: Dictionary object containing new project article attributes
@@ -139,6 +148,7 @@ def create_project_article(base_url, token, project_id, data):
 def update_project_article(base_url, token, article_id, data):
     ''' Update a project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     data: Dictionary object containing updated article attributes
@@ -152,6 +162,7 @@ def update_project_article(base_url, token, article_id, data):
 def delete_project_article(base_url, token, project_id, article_id):
     ''' Delete a project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     article_id: ID of the article (integer)
@@ -165,6 +176,7 @@ def delete_project_article(base_url, token, project_id, article_id):
 def list_project_article_files(base_url, token, project_id, article_id, page=1, page_size=10, impersonated_id=None):
     ''' List a project article's files
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     article_id: ID of the article (integer)
@@ -182,8 +194,9 @@ def list_project_article_files(base_url, token, project_id, article_id, page=1, 
     
 
 def view_project_article_file(base_url, token, project_id, article_id, file_id, impersonated_id=None):
-    ''' List a project article's files
+    ''' View details of a file belonging to a project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     article_id: ID of the article (integer)
@@ -202,6 +215,7 @@ def view_project_article_file(base_url, token, project_id, article_id, file_id, 
 def download_project_article_file(base_url,token, article_id, file_id):
     ''' Download a project article file
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     file_id: ID of the file (integer)
@@ -221,6 +235,7 @@ def download_project_article_file(base_url,token, article_id, file_id):
 def upload_project_article_file(base_url,token, article_id, file_path):
     ''' Upload a file to a project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the existing article to upload file to (integer)
     file_path: Full path to the file to upload
@@ -234,6 +249,7 @@ def upload_project_article_file(base_url,token, article_id, file_path):
 def delete_project_article_file(base_url, token, article_id, file_id):
     ''' Delete a project article file
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     file_id: ID of the file (integer)
@@ -247,6 +263,7 @@ def delete_project_article_file(base_url, token, article_id, file_id):
 def publish_project_article(base_url, token, article_id):
     ''' Publish a project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     '''
@@ -263,6 +280,7 @@ def publish_project_article(base_url, token, article_id):
 def invite_private_project_collaborator(base_url, token, project_id, data, impersonated_id=None):
     ''' Create a new private project article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     project_id: ID of the project (integer)
     data: Dictionary object containing project collaborator attributes

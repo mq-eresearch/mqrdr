@@ -1,316 +1,195 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Articles
+#
+# Note: All functions relate to artciles belonging to the current (or impersonated user). For public articles use the public API calls
+# 
 # ----------------------------------------------------------------------------------------------------------------------
 
-
 import requests
-from mqrdr import settings, utils, file_utils
+from mqrdr import utils, file_utils
 
 
-BASE_URL = settings.BASE_URL
+def list_articles(base_url, token, page=1, page_size=10, impersonated_id=None):
+    ''' List articles belonging to the current user
 
-
-# Public Articles
-
-def list_public_articles(token, page=1, page_size=10):
-    ''' List all public articles
-
-    token: Repository authorization token (string)
-    page: Page number. Used for pagination with page_size
-    page_size: The number of results included on a page. Used for pagination with page
+    token: Repository authorization token (string, required)
+    page: Page number. Used for pagination with page_size (integer, optional, default = 1)
+    page_size: The number of results included on a page. Used for pagination with page (integer, optional, default = 10)
+    impersonated_id: Account ID of user being impersonated (integer, optional, only usable by RDR admin accounts)
     '''
 
-    headers = utils.create_token_header(token)
+    if impersonated_id:
+        request_url = f"{base_url}/account/articles?page={page}&page_size={page_size}&impersonate={impersonated_id}"
+    else:
+        request_url = f"{base_url}/account/articles?page={page}&page_size={page_size}"
 
-    request_url = f"{BASE_URL}/articles?page={page}&page_size={page_size}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
+    return utils.endpoint_get(token, request_url)
 
 
+def search_articles(base_url, token, data):
+    ''' Search articles belonging to the current user
 
-def search_public_articles(token, data):
-    ''' Search public articles
-
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
-    data: Dictionary object containing search attributes
+    data: Dictionary object containing article filters
     '''
 
-    headers = utils.create_token_header(token)
+    request_url = f"{base_url}/account/articles/search"
 
-    request_url = f"{BASE_URL}/articles/search"
-    response = requests.post(request_url, json=data, headers=headers)
-
-    return response.json()
+    return utils.endpoint_post(token, request_url, data)
 
 
-def view_public_article(token, article_id):
-    ''' View a public article
+def view_article(base_url, token, article_id, impersonated_id=None):
+    ''' View an article belonging to the current user
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
+    token: Repository authorization token (string, required)
+    article_id: ID of the article (integer, required)
+    impersonated_id: Account ID of user being impersonated (integer, optional, only usable by RDR admin accounts)
+    '''
+
+    if impersonated_id:
+        request_url = f"{base_url}/account/articles/{article_id}?impersonate={impersonated_id}"
+    else:
+        request_url = f"{base_url}/account/articles/{article_id}"
+    
+    return utils.endpoint_get(token, request_url)
+
+
+def create_article(base_url, token, data):
+    ''' Create a new article
+
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
+    token: Repository authorization token (string)
+    data: Dictionary object containing new project article attributes
+    '''
+
+    request_url = f"{base_url}/account/articles"
+    
+    return utils.endpoint_post(token, request_url, data)
+
+
+def update_article(base_url, token, article_id, data):
+    ''' Update an article belonging to the current user
+
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
+    token: Repository authorization token (string)
+    article_id: ID of the article (integer)
+    data: Dictionary object containing updated article attributes
+    '''
+
+    request_url = f"{base_url}/account/articles/{article_id}"
+
+    return utils.endpoint_put(token, request_url, data)
+
+
+def delete_article(base_url, token, article_id):
+    ''' Delete an article belonging to the current user
+
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     '''
 
-    headers = utils.create_token_header(token)
+    request_url = f"{base_url}/account/articles/{article_id}"
 
-    request_url = f"{BASE_URL}/articles/{article_id}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
+    return utils.endpoint_delete(token, request_url)
 
 
-def list_public_article_files(token, article_id):
-    ''' List a public article's files
+def list_article_files(base_url, token, article_id, page=1, page_size=10, impersonated_id=None):
+    ''' List an article's files
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
+    page: Page number. Used for pagination with page_size (integer, optional, default = 1)
+    page_size: The number of results included on a page. Used for pagination with page (integer, optional, default = 10)
+    impersonated_id: Account ID of user being impersonated (integer, optional, only usable by RDR admin accounts)
     '''
 
-    headers = utils.create_token_header(token)
+    if impersonated_id:
+        request_url = f"{base_url}/account/articles/{article_id}/files?page={page}&page_size={page_size}&impersonate={impersonated_id}"
+    else:
+        request_url = f"{base_url}/account/articles/{article_id}/files?page={page}&page_size={page_size}"
 
-    request_url = f"{BASE_URL}/articles/{article_id}/files"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
+    return utils.endpoint_get(token, request_url)
 
 
-def view_public_article_file(token, article_id, file_id):
-    ''' View a public article file
+def view_article_file(base_url, token, article_id, file_id, impersonated_id=None):
+    ''' View details of a file belonging to an article
 
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
+    token: Repository authorization token (string)
+    article_id: ID of the article (integer)
+    file_id: ID of the file (integer)
+    impersonated_id: Account ID of user being impersonated (integer, optional, only usable by RDR admin accounts)
+    '''
+
+    if impersonated_id:
+        request_url = f"{base_url}/account/articles/{article_id}/files/{file_id}?impersonate={impersonated_id}"
+    else:
+        request_url = f"{base_url}/account/articles/{article_id}/files/{file_id}"
+
+    return utils.endpoint_get(token, request_url)
+
+
+def download_article_file(base_url,token, article_id, file_id):
+    ''' Download an article file
+
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     file_id: ID of the file (integer)
     '''
 
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/articles/{article_id}/files/{file_id}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
-
-
-def download_public_article_file(token, article_id, file_id):
-    ''' Download a public article file
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    file_id: ID of the file (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/articles/{article_id}/files/{file_id}"
-    response = requests.get(request_url, headers=headers)
+    request_url = f"{base_url}/articles/{article_id}/files/{file_id}"
+    response = utils.endpoint_get(token, request_url)
 
     filename = response.json()['name']
     download_url = response.json()['download_url']
 
     r = requests.get(download_url, allow_redirects=True)
     open(filename, 'wb').write(r.content)
+    return r
+    
 
+def upload_article_file(token, article_id, file_path):
+    ''' Upload a file to an article
 
-# Private Articles
-
-def list_private_articles(token, page=1, page_size=10, impersonated_id=None):
-    ''' List private articles
-
-    token: Repository authorization token (string, required)
-    page: Page number. Used for pagination with page_size (integer, optional, default = 1)
-    page_size: The number of results included on a page. Used for pagination with page (integer, optional, default = 10)
-    impersonated_id: Account ID of user being impersonated (integer, optional, only usable by admin accounts)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles?page={page}&page_size={page_size}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
-
-
-def create_private_article(token, data):
-    ''' Create a private article
-
-    token: Repository authorization token (string)
-    data: Dictionary object containing new article attributes
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles"
-    response = requests.post(request_url, json=data, headers=headers)
-
-    return response.json()
-
-
-def create_private_article_file(token, article_id, file_path):
-    ''' Upload a file to an existing private article
-
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the existing article to upload file to (integer)
     file_path: Full path to the file to upload
     '''
 
     file_info = file_utils.initiate_new_upload(token, article_id, file_path)
+    print(file_info)
     file_utils.upload_parts(token, file_info, file_path)
     file_utils.complete_upload(token, article_id, file_info['id'])
 
 
-def search_private_articles(token, data):
-    ''' Search private articles
+def delete_article_file(base_url, token, article_id, file_id):
+    ''' Delete an article file
 
-    token: Repository authorization token (string)
-    data: Dictionary object containing search attributes
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/search"
-    response = requests.post(request_url, json=data, headers=headers)
-
-    return response.json()
-
-
-def view_private_article(token, article_id):
-    ''' View a private article
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
-
-
-def list_private_article_authors(token, article_id):
-    ''' List a private article's authors
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}/authors"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
-
-
-def list_private_article_files(token, article_id):
-    ''' List a private article's files
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}/files"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
-
-
-def view_private_article_file(token, article_id, file_id):
-    ''' View a private article file
-
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     file_id: ID of the file (integer)
     '''
 
-    headers = utils.create_token_header(token)
+    request_url = f"{base_url}/account/articles/{article_id}/files/{file_id}"
 
-    request_url = f"{BASE_URL}/account/articles/{article_id}/files/{file_id}"
-    response = requests.get(request_url, headers=headers)
-
-    return response.json()
+    return utils.endpoint_delete(token, request_url)
 
 
-def download_private_article_file(token, article_id, file_id):
-    ''' Download a private article file
+def publish_article(base_url, token, article_id):
+    ''' Publish an article
 
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    file_id: ID of the file (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}/files/{file_id}"
-    response = requests.get(request_url, headers=headers)
-
-    filename = response.json()['name']
-    download_url = response.json()['download_url']
-
-    r = requests.get(download_url, headers=headers, allow_redirects=True)
-    open(filename, 'wb').write(r.content)
-
-
-def update_private_article(token, article_id, data):
-    ''' Update a private article
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    data: Dictionary object containing article updates
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}"
-    response = requests.put(request_url, json=data, headers=headers)
-
-    return response
-
-
-def delete_private_article(token, article_id):
-    ''' Delete a private article
-
+    base_url: Base URL of the figshare repository being used (e.g. https://api.figsh.com/v2)
     token: Repository authorization token (string)
     article_id: ID of the article (integer)
     '''
 
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}"
-    response = requests.delete(request_url, headers=headers)
-
-    return response
-
-
-def embargo_private_article(token, article_id, data):
-    ''' Embargo a private article
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    data: Dictionary object containing embargo details
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}/embargo"
-    response = requests.put(request_url, json=data, headers=headers)
-
-    # return response.json()
-    return response
-
-
-def publish_private_article(token, article_id):
-    ''' Publish a private article
-
-    token: Repository authorization token (string)
-    article_id: ID of the article (integer)
-    '''
-
-    headers = utils.create_token_header(token)
-
-    request_url = f"{BASE_URL}/account/articles/{article_id}/publish"
-    response = requests.post(request_url, headers=headers)
-
-    return response.json()
+    request_url = f"{base_url}/account/articles/{article_id}/publish"
+    
+    return utils.endpoint_post(token, request_url, data=None)

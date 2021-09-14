@@ -32,6 +32,8 @@ def raw_issue_request(token, method, url, data=None, binary=False):
         try:
             data = json.loads(response.content)
         except ValueError:
+            print('Caught an HTTPError: {}'.format(error.message))
+            print('Body:\n', response.content)
             data = response.content
     except HTTPError as error:
         raise
